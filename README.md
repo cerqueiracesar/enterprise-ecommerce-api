@@ -136,6 +136,8 @@ C4Context
     Rel(api, redis, "Caches/Retrieves", "Redis Protocol")
     Rel(api, payment, "Charges", "API Call")
 
+```
+
 The project is structured into **Modules** (Auth, Users, Products, Orders) to maintain separation of concerns.
 
 ---
