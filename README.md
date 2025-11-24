@@ -113,28 +113,35 @@ Access Swagger Docs at `http://localhost:3000/api/docs`.
 
 ## 🏛️ System Architecture
 
-The project follows a **Modular Monolith** architecture. Below is a high-level **C4 Container Diagram** illustrating the interactions between the API, Data Stores, and External Services.
+The project follows a **Modular Monolith** architecture. Below is a diagram illustrating the interactions between the API, Data Stores, and External Services.
 
 ```mermaid
-C4Context
-    title Container Diagram - Enterprise E-commerce API
-
-    Person(customer, "Customer", "A user browsing products or making orders")
-    Person(admin, "Admin", "A user managing inventory and products")
-
-    System_Boundary(system, "E-commerce Ecosystem") {
-        Container(api, "NestJS API", "Node.js, TypeScript", "Handles business logic, auth, and data orchestration")
-        ContainerDb(db, "PostgreSQL", "Relational Database", "Stores users, products, orders, and transactional data")
-        ContainerDb(redis, "Redis", "In-Memory Cache", "Stores sessions and frequently accessed product data")
-    }
-
-    System_Ext(payment, "Payment Gateway", "Stripe/Mock", "Processes payments (Mocked)")
-
-    Rel(customer, api, "Uses", "HTTPS/JSON")
-    Rel(admin, api, "Manages", "HTTPS/JSON")
-    Rel(api, db, "Reads/Writes", "Prisma ORM")
-    Rel(api, redis, "Caches/Retrieves", "Redis Protocol")
-    Rel(api, payment, "Charges", "API Call")
+graph TD
+    %% Actors
+    User((Customer))
+    Admin((Admin))
+    
+    %% System Boundary
+    subgraph "E-commerce Ecosystem"
+        API[NestJS API<br/>Node.js + TS]
+        DB[(PostgreSQL<br/>Relational DB)]
+        Redis[(Redis<br/>Cache)]
+    end
+    
+    %% External
+    Payment[Payment Gateway<br/>Stripe/Mock]
+    
+    %% Relationships
+    User -->|HTTPS/JSON| API
+    Admin -->|HTTPS/JSON| API
+    API -->|Prisma ORM| DB
+    API -->|Redis Protocol| Redis
+    API -->|API Call| Payment
+    
+    %% Styling
+    style API fill:#E0234E,stroke:#333,stroke-width:2px,color:#fff
+    style DB fill:#316192,stroke:#333,stroke-width:2px,color:#fff
+    style Redis fill:#DC382D,stroke:#333,stroke-width:2px,color:#fff
 
 ```
 
