@@ -1,0 +1,39 @@
+name: CI Pipeline # Nome do Workflow
+
+# Quando isso deve rodar?
+on:
+  push:
+    branches: [ main ] # A cada push na main
+  pull_request:
+    branches: [ main ] # A cada PR para a main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Roda numa máquina Linux virtual
+
+    steps:
+    # 1. Baixa o seu código
+    - uses: actions/checkout@v3
+
+    # 2. Instala o Node.js 20 (versão LTS atual)
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    # 3. Instala as dependências (npm ci é mais rápido e seguro que npm install para CI)
+    - name: Install Dependencies
+      run: npm ci
+
+    # 4. Gera o Prisma Client (necessário para o Build não falhar)
+    - name: Generate Prisma Client
+      run: npx prisma generate
+
+    # 5. Verifica a qualidade do código (ESLint)
+    - name: Run Linter
+      run: npm run lint
+
+    # 6. Tenta compilar o projeto (Se tiver erro de TypeScript, falha aqui)
+    - name: Build Application
+      run: npm run build

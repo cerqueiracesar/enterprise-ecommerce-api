@@ -14,6 +14,7 @@ model User {
   email     String   @unique
   name      String?
   password  String
+  orders    Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -26,9 +27,41 @@ model Product {
   price       Decimal  @db.Decimal(10, 2) // 10 dígitos totais, 2 casas decimais (Ex: 99999999.99)
   stock       Int      // Controle de inventário
   imageUrl    String?  // Opcional
-  
+  orderItems  OrderItem[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@map("products") // Nome da tabela no banco (boa prática usar plural e minúsculo)
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String
+  
+  total     Decimal     @db.Decimal(10, 2)
+  status    String      @default("PENDING") // PENDING, COMPLETED, CANCELED
+  
+  items     OrderItem[]
+  
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  
+  quantity  Int
+  price     Decimal  @db.Decimal(10, 2) // Preço "congelado" na hora da compra
+
+  @@map("order_items")
 }
