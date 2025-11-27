@@ -1,4 +1,5 @@
 # Enterprise E-commerce API
+![CI Status](https://github.com/cerqueiracesar/enterprise-ecommerce-api/actions/workflows/ci.yml/badge.svg)
 
 > A high-performance, scalable RESTful API built with **NestJS**, designed to handle complex e-commerce scenarios, concurrency, and caching strategies.
 
