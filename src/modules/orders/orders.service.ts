@@ -18,7 +18,7 @@ export class OrdersService {
     return this.prisma.$transaction(async (tx) => {
       let total = 0;
 
-      // Vamos montar a lista de itens para salvar depois
+      // Montar a lista de itens para salvar depois
       const orderItemsData: any[] = [];
 
       for (const item of items) {
@@ -39,7 +39,7 @@ export class OrdersService {
           );
         }
 
-        // 3. Decrementar o Stock (Aqui está a mágica!)
+        // 3. Decrementar o Stock (mágica!)
         await tx.product.update({
           where: { id: product.id },
           data: { stock: product.stock - item.quantity },
@@ -53,7 +53,7 @@ export class OrdersService {
         orderItemsData.push({
           productId: product.id,
           quantity: item.quantity,
-          price: product.price, // Salva o preço ATUAL
+          price: product.price, // Salvar o preço ATUAL
         });
       }
 
@@ -78,16 +78,4 @@ export class OrdersService {
   }
 
   // ... implementar findAll depois se quiser
-  findAll() {
-    return `This action returns all orders`;
-  }
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
-  }
-  update(id: number, updateOrderDto: any) {
-    return `Update`;
-  }
-  remove(id: number) {
-    return `Remove`;
-  }
 }

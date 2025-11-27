@@ -2,6 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
+// 1. Interface para tipar o payload
+interface JwtPayload {
+  sub: string;
+  email: string;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
@@ -15,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   // 3. Se o token for válido, o Nest roda essa função automaticamente
-  async validate(payload: any) {
+  validate(payload: JwtPayload) {
     // O retorno daqui é injetado no objeto `request.user`
     return { userId: payload.sub, email: payload.email };
   }

@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   UseGuards,
   Query,
   UseInterceptors,
@@ -13,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '@nestjs/passport';
 import {
   CacheInterceptor,
@@ -37,12 +34,13 @@ export class ProductsController {
   async create(@Body() createProductDto: CreateProductDto) {
     const product = await this.productsService.create(createProductDto);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     await (this.cacheManager as any).reset();
 
     return product;
   }
 
-  @UseInterceptors(CacheInterceptor) // <--- Mágica: O Nest verifica o Redis antes de rodar a função
+  @UseInterceptors(CacheInterceptor) // <--- (Mágica) O Nest verifica o Redis antes de rodar a função
   @CacheTTL(60 * 1000) // <--- Opcional: Cache dura 60 segundos (1 minuto) para essa rota
   @Get()
   @Get() // <--- SEM Guard! Público para todos verem a vitrine
@@ -56,15 +54,5 @@ export class ProductsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
   }
 }

@@ -1,6 +1,5 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
@@ -37,13 +36,5 @@ export class ProductsService {
     return this.prisma.product.findUnique({
       where: { id },
     });
-  }
-
-  // ... mantenha os outros métodos update/remove vazios por enquanto
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `Action updates #${id}`;
-  }
-  remove(id: number) {
-    return `Action removes #${id}`;
   }
 }
